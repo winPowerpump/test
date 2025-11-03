@@ -342,7 +342,7 @@ const TokensList = () => {
                           
                           {/* Tweet Intent Button and Fee Account Link with Twitter Profile Photo */}
                           {token.fee_account && (
-                            <div className="flex items-center gap-1">
+                            <div className="items-center gap-1 hidden">
                               {/* Tweet Intent Button with Speaker Icon */}
                               <button
                                 onClick={(e) => {

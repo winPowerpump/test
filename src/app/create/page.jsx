@@ -15,7 +15,7 @@ const PumpTokenCreator = () => {
     twitter: '',
     telegram: '',
     website: '',
-    directFeesTo: ''
+    directFeesTo: 'agorapilled'
   });
   
   const [loading, setLoading] = useState(false);
@@ -212,8 +212,6 @@ const PumpTokenCreator = () => {
       apiFormData.append('twitter', formData.twitter);
       apiFormData.append('telegram', formData.telegram);
       apiFormData.append('website', formData.website);
-      // Use the function to ensure @ prefix when submitting
-      apiFormData.append('directFeesTo', getDirectFeesToValue());
       
       if (formData.image) {
         apiFormData.append('image', formData.image);
@@ -266,7 +264,6 @@ const PumpTokenCreator = () => {
         twitter: '',
         telegram: '',
         website: '',
-        directFeesTo: ''
       });
       setPreviewImage('');
 
@@ -584,21 +581,6 @@ const PumpTokenCreator = () => {
                 className="w-full bg-[#24252B] border border-[#2F3036] rounded-lg px-4 py-3 text-gray-500 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
               />
               <p className="text-xs text-gray-500 mt-1 hidden">{formData.description.length}/500 characters</p>
-            </div>
-
-            <div>
-              <label className="block text-gray-400 font-semibold mb-2">
-                Send Fees*
-                <span className="text-xs text-gray-500 ml-2">(2 tokens max per day per account)</span>
-              </label>
-              <input
-                type="text"
-                name="directFeesTo"
-                value={formData.directFeesTo}
-                onChange={handleDirectFeesToChange}
-                placeholder="@printedwtf"
-                className="w-full bg-[#24252B] border border-[#2F3036] rounded-lg px-4 py-3 text-gray-500 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-              />
             </div>
 
             <div>

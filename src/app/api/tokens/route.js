@@ -14,7 +14,6 @@ export async function GET(request) {
     const limit = parseInt(searchParams.get('limit') || '20');
     const status = searchParams.get('status');
     const search = searchParams.get('search');
-    const feeAccount = searchParams.get('fee_account'); // Filter by X username
     
     const offset = (page - 1) * limit;
 
@@ -29,17 +28,6 @@ export async function GET(request) {
       .from('tokens')
       .select('*', { count: 'exact' })
       .order('created_at', { ascending: false });
-
-    // Exclude blocked fee accounts
-    // Use NOT IN with case-insensitive matching
-    blockedAccounts.forEach(blocked => {
-      query = query.not('fee_account', 'ilike', blocked);
-    });
-
-    // Add fee_account filter for logged-in user (case-insensitive)
-    if (feeAccount) {
-      query = query.ilike('fee_account', feeAccount);
-    }
 
     // Add other filters
     if (status && status !== 'all') {

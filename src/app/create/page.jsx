@@ -547,7 +547,7 @@ const PumpTokenCreator = () => {
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
-                    placeholder="Printed"
+                    placeholder="Yield"
                     required
                     className="w-full bg-[#24252B] border border-[#2F3036] rounded-lg px-4 py-3 text-gray-500 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                   />
@@ -560,7 +560,7 @@ const PumpTokenCreator = () => {
                     name="symbol"
                     value={formData.symbol}
                     onChange={handleInputChange}
-                    placeholder="PRINTED"
+                    placeholder="APY"
                     required
                     maxLength="10"
                     className="w-full bg-[#24252B] border border-[#2F3036] rounded-lg px-4 py-3 text-gray-500 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"

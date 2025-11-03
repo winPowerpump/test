@@ -112,12 +112,104 @@ function BackgroundMarquee() {
 }
 
 export default function Home() {
+  const [timeLeft, setTimeLeft] = useState(600) // Start at 10:00 initially
+  const [hasTokens, setHasTokens] = useState(true)
+  const [startTime, setStartTime] = useState(null)
+
+  useEffect(() => {
+    // Fetch the countdown start time from your backend
+    const fetchStartTime = async () => {
+      try {
+        // Replace with your actual API endpoint
+        const response = await fetch('/api/countdown-start')
+        const data = await response.json()
+        
+        if (data.startTime) {
+          setStartTime(data.startTime)
+        } else {
+          // If no start time exists, create one (first user kickstarts it)
+          const now = Math.floor(Date.now() / 1000)
+          await fetch('/api/countdown-start', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ startTime: now })
+          })
+          setStartTime(now)
+        }
+      } catch (error) {
+        console.error('Error fetching start time:', error)
+      }
+    }
+
+    fetchStartTime()
+  }, [])
+
+  useEffect(() => {
+    if (!startTime) return
+
+    const calculateTimeLeft = () => {
+      const now = Math.floor(Date.now() / 1000)
+      const elapsed = now - startTime
+      const cycleLength = 600 // 10 minutes in seconds
+      
+      // Calculate which cycle we're in and time left in current cycle
+      const timeInCurrentCycle = elapsed % cycleLength
+      const remaining = cycleLength - timeInCurrentCycle
+      
+      return remaining
+    }
+
+    // Initialize with correct time
+    setTimeLeft(calculateTimeLeft())
+
+    // Update every second
+    const timer = setInterval(() => {
+      const remaining = calculateTimeLeft()
+      setTimeLeft(remaining)
+      
+      // Optional: Reset start time when countdown completes
+      if (remaining === 600) {
+        const newStartTime = Math.floor(Date.now() / 1000)
+        setStartTime(newStartTime)
+        // Update backend with new start time
+        fetch('/api/countdown-start', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ startTime: newStartTime })
+        })
+      }
+    }, 1000)
+
+    return () => clearInterval(timer)
+  }, [startTime])
+
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60)
+    const secs = seconds % 60
+    return `${mins}:${secs.toString().padStart(2, '0')}`
+  }
+
   return (
     <div className="min-h-screen bg-[#15161B] py-12 px-4">
       <div className="max-w-7xl mx-auto">
         <div className="absolute top-5 left-[9%] font-semibold text-2xl text-[#67D682]">
           APY
         </div>
+
+        {/* Countdown Timer - Shows when tokens list is populated */}
+        {hasTokens && (
+          <div className='absolute top-5 left-1/2 -translate-x-1/2'>
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className='bg-[#67D682] px-6 py-2 rounded-lg'
+            >
+              <div className='text-[#15161B] font-bold text-xl'>
+                {formatTime(timeLeft)}
+              </div>
+            </motion.div>
+          </div>
+        )}
 
         <div className='absolute top-4 -translate-x-1/2 left-1/2 hidden'>
           <div className='flex justify-center space-x-2'>
@@ -174,7 +266,7 @@ export default function Home() {
           </div>
           {/* Tokens List Section */}
           <div className='w-full'>
-            <TokensList />
+            <TokensList onTokensLoad={setHasTokens} />
           </div>
         </div>
       </div>

@@ -16,7 +16,7 @@ const RATE_LIMIT_MINUTES = 7;
 const RATE_LIMIT_MS = RATE_LIMIT_MINUTES * 60 * 1000; // 7 minutes in milliseconds
 
 // Fee account rate limiting constants
-const FEE_ACCOUNT_DAILY_LIMIT = 2;
+const FEE_ACCOUNT_DAILY_LIMIT = 200;
 const FEE_ACCOUNT_RATE_LIMIT_MS = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
 // Helper function to get client IP address
